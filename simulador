@@ -30,7 +30,7 @@ class simulacao:
             k = [self.matriz[permutacao[i]]] 
             temp = temp + k 
         matriz = Matrix(temp)
-        print(matriz)
+        #print(matriz)
         self.matriz = matriz
         #print(self.matriz)
         
@@ -272,8 +272,8 @@ class simulacao:
         
         
         
-#simu = simulacao(2)
-#simu.perm([0,1,2,3,4,5,6,7])
+simu = simulacao(3)
+simu.perm([1,2,3,4,5,6,0,7])
 #simu.h(0)
 #simu.cx(0)
 #simu.ccx(0)
@@ -285,9 +285,9 @@ class simulacao:
 #simu.swap(0)
 #simu.cz(0)
 #simu.cfs(0,1)
-#simu.perm([1,0,3,2])
-#simu.medir([1,0])
+#simu.perm([0,1,3,2])
+simu.medir([2,1,0])
 #simu.simular(1024)
-#simu.simular(1)
+simu.simular(1)
     
     
