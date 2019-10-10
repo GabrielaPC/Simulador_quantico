@@ -19,7 +19,21 @@ class simulacao:
             
         return Matrix(matriz)
         
-    
+    def perm(self,permut):
+        permutacao = []
+        temp = []
+        
+        for i in range(len(permut)):
+            permutacao.append(permut[int(self.tratar_perm(i),base =2)])
+        
+        for i in range(len(permut)):
+            k = [self.matriz[permutacao[i]]] 
+            temp = temp + k 
+        matriz = Matrix(temp)
+        print(matriz)
+        self.matriz = matriz
+        #print(self.matriz)
+        
     def x(self,k,t=1):
         op = Matrix([1])
         for i in range(self.n):
@@ -29,8 +43,8 @@ class simulacao:
             else:
                 op = TensorProduct(op,Matrix([[1,0],[0,1]]))
                 
-        self.matriz = op * self.matriz        
-    
+        self.matriz = op * self.matriz    
+        
     def h(self,k,t=1):
         op = Matrix([1])
         for i in range(self.n):
@@ -61,8 +75,8 @@ class simulacao:
         op = Matrix([1])
         for i in range(self.n):
             if i >= k and i <k+t:
-                pz = Matrix([[1,0],[0,I]])
-                op = TensorProduct(op,pz)
+                ps = Matrix([[1,0],[0,I]])
+                op = TensorProduct(op,ps)
             else:
                 op = TensorProduct(op,Matrix([[1,0],[0,1]]))
                 
@@ -73,8 +87,8 @@ class simulacao:
         op = Matrix([1])
         for i in range(self.n):
             if i >= k and i <k+t:
-                pz = Matrix([[0,-I],[I,0]])
-                op = TensorProduct(op,pz)
+                py = Matrix([[0,-I],[I,0]])
+                op = TensorProduct(op,py)
             else:
                 op = TensorProduct(op,Matrix([[1,0],[0,1]]))
                 
@@ -84,8 +98,8 @@ class simulacao:
         op = Matrix([1])
         for i in range(self.n):
             if i >= k and i <k+t:
-                pz = Matrix([[1,0],[0,e**(I*pi/4)]])
-                op = TensorProduct(op,pz)
+                pt = Matrix([[1,0],[0,e**(I*pi/4)]])
+                op = TensorProduct(op,pt)
             else:
                 op = TensorProduct(op,Matrix([[1,0],[0,1]]))
                 
@@ -108,8 +122,8 @@ class simulacao:
         op = Matrix([1])
         for i in range(self.n):
             if i == k:
-                cnot = Matrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,-1]])
-                op = TensorProduct(op,cnot)
+                control_z = Matrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,-1]])
+                op = TensorProduct(op,control_z)
             elif i == (k + 1):
                 i = i
             else:
@@ -121,41 +135,14 @@ class simulacao:
         op = Matrix([1])
         for i in range(self.n):
             if i == k:
-                cnot = Matrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,I]])
-                op = TensorProduct(op,cnot)
+                cphase = Matrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,I]])
+                op = TensorProduct(op,cphase)
             elif i == (k + 1):
                 i = i
             else:
                 op = TensorProduct(op,Matrix([[1,0],[0,1]]))
                 
-        self.matriz = op * self.matriz 
-            
-    def ccx(self,k):
-        op = Matrix([1])
-        for i in range(self.n):
-            if i == k:
-                cnot = Matrix([[1,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0],[0,0,1,0,0,0,0,0],[0,0,0,1,0,0,0,0],[0,0,0,0,1,0,0,0],[0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1],[0,0,0,0,0,0,1,0]])
-                op = TensorProduct(op,cnot)
-            elif i == (k + 1) or i == (k+2):
-                i = i
-            else:
-                op = TensorProduct(op,Matrix([[1,0],[0,1]]))
-                
-        self.matriz = op * self.matriz 
-
-    def cswap(self,k):
-        op = Matrix([1])
-        for i in range(self.n):
-            if i == k:
-                cnot = Matrix([[1,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0],[0,0,1,0,0,0,0,0],[0,0,0,1,0,0,0,0],[0,0,0,0,1,0,0,0],[0,0,0,0,0,0,1,0],[0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1]])
-                op = TensorProduct(op,cnot)
-            elif i == (k + 1) or i == (k+2):
-                i = i
-            else:
-                op = TensorProduct(op,Matrix([[1,0],[0,1]]))
-                
-        self.matriz = op * self.matriz 
-    
+        self.matriz = op * self.matriz             
     
     def swap(self,k):
         op = Matrix([1])
@@ -184,7 +171,33 @@ class simulacao:
                 op = TensorProduct(op,Matrix([[1,0],[0,1]]))
                 
         self.matriz = op * self.matriz 
-        
+
+    def ccx(self,k):
+        op = Matrix([1])
+        for i in range(self.n):
+            if i == k:
+                ccnot = Matrix([[1,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0],[0,0,1,0,0,0,0,0],[0,0,0,1,0,0,0,0],[0,0,0,0,1,0,0,0],[0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1],[0,0,0,0,0,0,1,0]])
+                op = TensorProduct(op,ccnot)
+            elif i == (k + 1) or i == (k+2):
+                i = i
+            else:
+                op = TensorProduct(op,Matrix([[1,0],[0,1]]))
+                
+        self.matriz = op * self.matriz 
+
+    def cswap(self,k):
+        op = Matrix([1])
+        for i in range(self.n):
+            if i == k:
+                control_swap = Matrix([[1,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0],[0,0,1,0,0,0,0,0],[0,0,0,1,0,0,0,0],[0,0,0,0,1,0,0,0],[0,0,0,0,0,0,1,0],[0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1]])
+                op = TensorProduct(op,control_swap)
+            elif i == (k + 1) or i == (k+2):
+                i = i
+            else:
+                op = TensorProduct(op,Matrix([[1,0],[0,1]]))
+                
+        self.matriz = op * self.matriz 
+            
     
     def cria_soma(self):
         temp = []
@@ -211,12 +224,16 @@ class simulacao:
     
     def tratar(self,k):
         temp = bin(2**self.n + k)[3:]
-        temp = temp[::-1]
+        #temp = temp[::-1]
         num = ''
         for i in self.cbits:
-            num = num + temp[self.n-i-1]
-        
-        return int(num)
+            num = num + temp[i]
+        return num
+    
+    def tratar_perm(self,k):
+        temp = bin(2**self.n + k)[3:]
+        return temp[::-1]
+    
     def simular(self,t):
         resultado = {}
         arvore = self.cria_soma()
@@ -254,3 +271,23 @@ class simulacao:
      
         
         
+        
+#simu = simulacao(2)
+#simu.perm([0,1,2,3,4,5,6,7])
+#simu.h(0)
+#simu.cx(0)
+#simu.ccx(0)
+#simu.x(0)
+#simu.swap(0)
+#simu.h(0,2)
+#simu.swap(0)
+#simu.cz(0)
+#simu.swap(0)
+#simu.cz(0)
+#simu.cfs(0,1)
+#simu.perm([1,0,3,2])
+#simu.medir([1,0])
+#simu.simular(1024)
+#simu.simular(1)
+    
+    
