@@ -20,11 +20,11 @@ class simulacao:
         return Matrix(matriz)
         
     def perm(self,permut):
-        permutacao = []
+        permutacao = [None]*2**self.n
         temp = []
         
         for i in range(len(permut)):
-            permutacao.append(permut[int(self.tratar_perm(i),base =2)])
+            permutacao[int(self.tratar_perm(i),base = 2)] = int(self.tratar_perm(permut[i]), base = 2)
         
         for i in range(len(permut)):
             k = [self.matriz[permutacao[i]]] 
@@ -34,16 +34,26 @@ class simulacao:
         self.matriz = matriz
         #print(self.matriz)
         
+        
     def x(self,k,t=1):
-        op = Matrix([1])
-        for i in range(self.n):
-            if i >= k and i <k+t:
-                had = Matrix([[0,1],[1,0]])
-                op = TensorProduct(op,had)
-            else:
-                op = TensorProduct(op,Matrix([[1,0],[0,1]]))
-                
-        self.matriz = op * self.matriz    
+        for j in range(0,t):
+            cont = 0
+            trava = 0
+            permut = []
+            for i in range(2**self.n):
+                permut.append(i)
+            for i in range(int(2**(self.n))):
+                if cont == 2**(k+j):
+                    if trava < 2**(k+j)-1:
+                        trava += 1
+                    else:
+                        trava = 0    
+                        cont = 0
+                else:
+    
+                    permut[i],permut[i+2**(k+j)] = permut[i+2**(k+j)],permut[i]
+                    cont += 1  
+            self.perm(permut)    
         
     def h(self,k,t=1):
         op = Matrix([1])
@@ -57,7 +67,6 @@ class simulacao:
                 op = TensorProduct(op,Matrix([[1,0],[0,1]]))
                 
         self.matriz = op * self.matriz
-
 
 
     def z(self,k,t=1):    
@@ -271,23 +280,3 @@ class simulacao:
      
         
         
-        
-simu = simulacao(3)
-simu.perm([1,2,3,4,5,6,0,7])
-#simu.h(0)
-#simu.cx(0)
-#simu.ccx(0)
-#simu.x(0)
-#simu.swap(0)
-#simu.h(0,2)
-#simu.swap(0)
-#simu.cz(0)
-#simu.swap(0)
-#simu.cz(0)
-#simu.cfs(0,1)
-#simu.perm([0,1,3,2])
-simu.medir([2,1,0])
-#simu.simular(1024)
-simu.simular(1)
-    
-    
